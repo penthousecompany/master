@@ -2,6 +2,9 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
+import requests
+from io import StringIO
+
 
 # Function to get the latest price of a ticker
 def get_latest_price(ticker, stock_data):
@@ -88,7 +91,18 @@ def update_portfolio(orders, initial_portfolio,cash, stock_data):
 
 
 # Load stock data
-stock_data = pd.read_csv(r'C:\Users\binh.dd01\OneDrive\6. Business Ideas\Stock Recommendation Project (SRP)\1. Product\5. Analysis\Portfolio Management\curated_stock_ohlc.csv')
+# URL to the raw CSV file on GitHub
+url = 'https://raw.githubusercontent.com/username/repository/branch/data.csv'
+
+# Make a GET request to fetch the raw CSV content
+response = requests.get(url)
+response.raise_for_status()  # This will raise an HTTPError if the request returned an unsuccessful status code.
+
+# Use StringIO to convert the text content into a file-like object so pd.read_csv can read it
+data = StringIO(response.text)
+
+# Read the data into a pandas DataFrame
+stock_data = pd.read_csv(data)
 
 # Initialize session state for storing orders
 if 'orders' not in st.session_state:
