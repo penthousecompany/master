@@ -4,11 +4,18 @@ import json
 
 # Load the data
 @st.cache_data
-def load_data():
-    file_path = r'C:\Users\binh.dd01\OneDrive\6. Business Ideas\Stock Recommendation Project (SRP)\2. Database\master_folder\master_data\data_raw\financial_flow_incomestatement_yearly\financial_flow_incomestatement_yearly.xlsx'
-    return pd.read_excel(file_path)
 
-df = load_data()
+url = 'https://raw.githubusercontent.com/penthousecompany/master/main/raw/financial_report_incomestatement_yearly_final/financial_report_incomestatement_yearly_final.csv'
+
+# Make a GET request to fetch the raw CSV content
+response = requests.get(url)
+response.raise_for_status()  # This will raise an HTTPError if the request returned an unsuccessful status code.
+
+# Use StringIO to convert the text content into a file-like object so pd.read_csv can read it
+data = StringIO(response.text)
+
+# Read the data into a pandas DataFrame
+df = pd.read_csv(data)
 
 # Function to parse JSON data
 def parse_json(data):
