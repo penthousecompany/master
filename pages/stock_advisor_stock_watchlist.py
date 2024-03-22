@@ -31,12 +31,31 @@ file_path_index = 'https://github.com/penthousecompany/master/raw/main/curated/c
 
 # Load the data
 df_index = load_data(file_path_index)
+df_index=df_index.iloc[:,0].str.split(',', expand=True)
 
+# Define column names based on the provided information
+column_names = [
+    "Ngay", "GiaDieuChinh", "Giá Đóng Cửa", "Thay Đổi", "Khối Lượng Khớp Lệnh", 
+    "Giá Trị Khớp Lệnh", "KL Thỏa Thuận", "GT Thỏa Thuận", "Giá Mở Cửa", 
+    "Giá Cao Nhất", "Giá Thấp Nhất"
+]
+
+# Assign the column names to the dataframe
+df_index.columns = column_names
 df_index=df_index[['Ngay','GiaDieuChinh']]
 #ohld means open, high, low, close
+# URL to the raw CSV file on GitHub
+url = 'https://raw.githubusercontent.com/penthousecompany/master/main/curated/curated_stock_ohlc.csv'
 
-file_path = r'curated_stock_ohlc.csv'
-data = pd.read_csv(file_path)
+# Make a GET request to fetch the raw CSV content
+response = requests.get(url)
+response.raise_for_status()  # This will raise an HTTPError if the request returned an unsuccessful status code.
+
+# Use StringIO to convert the text content into a file-like object so pd.read_csv can read it
+data = StringIO(response.text)
+
+# Read the data into a pandas DataFrame
+data = pd.read_csv(data)
 
 #modify data
 data=data.drop('datime',axis=1)
