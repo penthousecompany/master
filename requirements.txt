@@ -8,5 +8,4 @@ scipy
 matplotlib
 seaborn
 xlsxwriter
-io
 plotly
