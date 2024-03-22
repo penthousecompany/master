@@ -46,13 +46,17 @@ if ticker_selected:
     for metric in tickers_data[ticker_selected].values():
         years_available.update(metric.keys())
 years_available = sorted(years_available)
-
-# Year range selection
-start_year, end_year = st.select_slider(
-    'Select a Year Range',
-    options=years_available,
-    value=(min(years_available), max(years_available))
-)
+# Ensure there are available years to select from
+if years_available:
+    # Year range selection
+    start_year, end_year = st.select_slider(
+        'Select a Year Range',
+        options=years_available,
+        value=(min(years_available), max(years_available))
+    )
+else:
+    st.warning("No years available for the selected ticker. Please select a different ticker.")
+    start_year, end_year = None, None
 
 # Financial metrics selection
 financial_metrics = list(tickers_data[ticker_selected].keys())
