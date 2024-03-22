@@ -62,7 +62,7 @@ data = pd.read_csv(data)
 if "datime" in data.columns:
     data=data.drop('datime',axis=1)
 else:
-    skip
+    pass
 data['time'] =  pd.to_datetime(data['time'])
 data_agg = data.groupby(['time', 'ticker']).mean().reset_index()
 pivot_data = data_agg.pivot(index='time', columns='ticker', values='close')
