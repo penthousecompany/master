@@ -97,5 +97,5 @@ company_events_url = 'https://raw.githubusercontent.com/penthousecompany/master/
 company_events_full=get_data_csv(company_events_url)
 company_events=company_events_full[['ticker','price','priceChange','eventName','eventCode','notifyDate','exerDate','regFinalDate','exRigthDate','eventDesc','eventNote']]
 st.write("Company Event")
-st.write(company_events)#[company_events['ticker']==selected_ticker])
+st.write(company_events[company_events['ticker']==selected_ticker])
 #datime,id,ticker,price,priceChange,priceChangeRatio,priceChangeRatio1W,priceChangeRatio1M,eventName,eventCode,notifyDate,exerDate,regFinalDate,exRigthDate,eventDesc,eventNote
