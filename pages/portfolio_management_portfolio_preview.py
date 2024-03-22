@@ -92,7 +92,7 @@ def update_portfolio(orders, initial_portfolio,cash, stock_data):
 
 # Load stock data
 # URL to the raw CSV file on GitHub
-url = 'https://raw.githubusercontent.com/penthousecompany/master/main/data.csv'
+url = 'https://raw.githubusercontent.com/penthousecompany/master/main/curated_stock_ohlc.csv'
 
 # Make a GET request to fetch the raw CSV content
 response = requests.get(url)
