@@ -86,7 +86,7 @@ merged_data = merged_data.rename(columns={"GiaDieuChinh": "VNINDEX"})
 merged_data.dropna(inplace=True)
 st.write(merged_data)
 
-data_normalized = merged_data / merged_data.iloc[0] * 100
+data_normalized = merged_data #/ merged_data.iloc[0] * 100
 
 # Plot the normalized data as lines
 data_normalized.plot.line(figsize=(20, 6))
