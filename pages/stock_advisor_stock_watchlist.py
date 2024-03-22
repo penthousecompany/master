@@ -59,7 +59,10 @@ data = StringIO(response.text)
 data = pd.read_csv(data)
 
 #modify data
-data=data.drop('datime',axis=1)
+if "datime":
+    data=data.drop('datime',axis=1)
+else:
+    skip
 data['time'] =  pd.to_datetime(data['time'])
 data_agg = data.groupby(['time', 'ticker']).mean().reset_index()
 pivot_data = data_agg.pivot(index='time', columns='ticker', values='close')
@@ -68,7 +71,7 @@ pivot_data = data_agg.pivot(index='time', columns='ticker', values='close')
 tickers = ['VNM','VCB','MWG','HPG','PNJ','FPT']
 pivot_data=pivot_data[tickers].sort_index(ascending=True)
 
-start = pd.to_datetime('2015-01-01')
+start = pd.to_datetime('2022-01-01')
 end = pd.to_datetime('2023-12-09')
 
 prices_df=pivot_data.loc[start:end]
