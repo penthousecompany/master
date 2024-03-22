@@ -59,7 +59,7 @@ data = StringIO(response.text)
 data = pd.read_csv(data)
 
 #modify data
-if "datime":
+if "datime" in data.columns:
     data=data.drop('datime',axis=1)
 else:
     skip
