@@ -84,6 +84,8 @@ merged_data = pd.merge(prices_df, df_index_filtered, left_index=True, right_on='
 merged_data.set_index('Ngay', inplace=True)
 merged_data = merged_data.rename(columns={"GiaDieuChinh": "VNINDEX"})
 
+st.write(merged_data)
+
 data_normalized = merged_data / merged_data.iloc[0] * 100
 
 # Plot the normalized data as lines
