@@ -1,20 +1,38 @@
 import streamlit as st
 
+import requests
+from io import BytesIO
 #importing packages
 import numpy as np
 import pandas as pd
+
 import matplotlib.pyplot as plt
+
 import scipy.optimize as spop
-import matplotlib.pyplot as plt
 import plotly.graph_objs as go
 
 st.write('Hello')
 
 #ohld means open, high, low, close
-file_path_index = r'curated_vnindex.csv'
-df_index = pd.read_csv(file_path_index)
-df_index=df_index[['Ngay','GiaDieuChinh']]
+# Correct the function to load Excel files
+def load_data(url):
+    # Make a GET request to fetch the raw Excel content
+    response = requests.get(url)
+    response.raise_for_status()  # This will raise an HTTPError if the request returned an unsuccessful status code.
+    
+    # Use BytesIO to convert the binary content into a file-like object so pd.read_excel can read it
+    data = BytesIO(response.content)
+    
+    # Read the data into a pandas DataFrame
+    return pd.read_excel(data)
 
+# URL pointing to the Excel file
+file_path_index = 'https://github.com/penthousecompany/master/raw/main/curated/curated_vnindex.xlsx'
+
+# Load the data
+df_index = load_data(file_path_index)
+
+df_index=df_index[['Ngay','GiaDieuChinh']]
 #ohld means open, high, low, close
 
 file_path = r'curated_stock_ohlc.csv'
