@@ -5,16 +5,18 @@ import numpy as np
 import requests
 from io import StringIO
 
-url = ' https://raw.githubusercontent.com/penthousecompany/master/main/curated/curated_company_profile.csv'
+profile_url = ' https://raw.githubusercontent.com/penthousecompany/master/main/curated/curated_company_profile.csv'
+
+def get_data_csv(url):
+    response=requests.get(url)
+    response.raise_for_status()
+    data_raw = StringIO(response.text)
+    data = pd.read_csv(data_raw)
+    return data
+
 # Make a GET request to fetch the raw CSV content
-response = requests.get(url)
-response.raise_for_status()  # This will raise an HTTPError if the request returned an unsuccessful status code.
-
-# Use StringIO to convert the text content into a file-like object so pd.read_csv can read it
-data = StringIO(response.text)
-
 # Read the data into a pandas DataFrame
-company_data = pd.read_csv(data)
+company_data = get_data_csv(profile_url)
 company_data.drop_duplicates(inplace=True)
 
 shareholder_info=company_data[['ticker','shareHolder_OwnPercent','shortName']]
@@ -27,7 +29,8 @@ shareholder_info['display']= shareholder_info['ticker'] + ' - ' + shareholder_in
 
 
 # Input widget to accept part of ticker or company name
-user_input = st.text_input('Enter Company Ticker or Name:', on_change=None, key="user_input")
+#user_input = st.text_input('Enter Company Ticker or Name:', on_change=None, key="user_input")
+user_input = st.selectbox('Select a Ticker', shareholder_info['display'])
 
 # Function to handle option selection
 def handle_option_selection(option):
@@ -36,21 +39,9 @@ def handle_option_selection(option):
 # Process input
 if user_input:
     # Normalize input and company display names to lowercase for case-insensitive matching
-    user_input_lower = user_input.lower()
-    company_data['display_name'] = company_data['ticker'] + ' - ' + company_data['shortName']
-    company_data['display_name_lower'] = company_data['display_name'].str.lower()
-    
-    # Filtering logic
-    start_matches = company_data[company_data['display_name_lower'].str.lower().str.startswith(user_input_lower)]
-    contain_matches = company_data[company_data['display_name_lower'].str.contains(user_input_lower)]
-    filtered_data = pd.concat([start_matches, contain_matches]).drop_duplicates()
-
-    if not filtered_data.empty:
-        st.write("Select a company:")
-        # Display options as buttons or radios
-        for _, row in filtered_data.iterrows():
-            if st.button(row['display_name'], key=row['ticker']):
-                handle_option_selection(row['display_name'])
+    handle_option_selection(user_input)
+else:
+    st.write("There's no company matching")
 
 # Show selected company's ownership percentage
 if st.session_state.get('selected_company'):
@@ -93,3 +84,18 @@ if st.session_state.get('selected_company'):
 # Optionally display the full company data
 if st.checkbox('Show Full Company Data'):
     st.write(company_data)
+
+
+company_insider_deal_url = 'https://raw.githubusercontent.com/penthousecompany/master/main/structured/structured_company_insider_deals.csv'
+insider_deal=get_data_csv(company_insider_deal_url)
+st.write("Insider Deal, Lưu ý, hiện tại các ticker ở Insider Deal bị lệch nhiều so với Ticker thông thường")
+st.write(insider_deal)#[insider_deal['ticker']==selected_ticker])
+
+#ticker,dealAnnounceDate,dealMethod,dealAction,dealQuantity,dealPrice,dealRatio
+
+company_events_url = 'https://raw.githubusercontent.com/penthousecompany/master/main/structured/structured_company_events.csv'
+company_events_full=get_data_csv(company_events_url)
+company_events=company_events_full[['ticker','price','priceChange','eventName','eventCode','notifyDate','exerDate','regFinalDate','exRigthDate','eventDesc','eventNote']]
+st.write("Company Event")
+st.write(company_events)#[company_events['ticker']==selected_ticker])
+#datime,id,ticker,price,priceChange,priceChangeRatio,priceChangeRatio1W,priceChangeRatio1M,eventName,eventCode,notifyDate,exerDate,regFinalDate,exRigthDate,eventDesc,eventNote
