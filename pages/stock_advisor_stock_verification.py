@@ -1,21 +1,27 @@
 import streamlit as st
 import pandas as pd
 import json
+import requests
+from io import StringIO
+
+# Corrected decorator and added function for loading data
+@st.cache(suppress_st_warning=True)
+def load_data(url):
+    # Make a GET request to fetch the raw CSV content
+    response = requests.get(url)
+    response.raise_for_status()  # This will raise an HTTPError if the request returned an unsuccessful status code.
+    
+    # Use StringIO to convert the text content into a file-like object so pd.read_csv can read it
+    data = StringIO(response.text)
+    
+    # Read the data into a pandas DataFrame
+    return pd.read_csv(data)
 
 # Load the data
-@st.cache_data
+url = 'https://raw.githubusercontent.com/penthousecompany/master/main/raw/financial_report_incomestatement_yearly_final/financial_report_incomestatement_yearly_final.csv'
+df = load_data(url)
 
-url = "https://raw.githubusercontent.com/penthousecompany/master/main/raw/financial_report_incomestatement_yearly_final/financial_report_incomestatement_yearly_final.csv"
 
-# Make a GET request to fetch the raw CSV content
-response = requests.get(url)
-response.raise_for_status()  # This will raise an HTTPError if the request returned an unsuccessful status code.
-
-# Use StringIO to convert the text content into a file-like object so pd.read_csv can read it
-data = StringIO(response.text)
-
-# Read the data into a pandas DataFrame
-df = pd.read_csv(data)
 
 # Function to parse JSON data
 def parse_json(data):
