@@ -10,6 +10,7 @@ import pandas as pd
 
 import scipy.optimize as spop
 import plotly.graph_objs as go
+from io import StringIO
 
 st.write('Hello')
 
