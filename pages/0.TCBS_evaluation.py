@@ -39,4 +39,12 @@ st.write("Cập nhật lần cuối vào","Năm", year, "Tháng", month, "Ngày"
 
 tcbs_board_raw = tcbs_board_raw[['ticker','response']]
 expanded_df = tcbs_board_raw.apply(expand_response_column, axis=1)
-st.write(expanded_df)
+expanded_df=expanded_df[(expanded_df['Giá']>0) &
+                        (expanded_df['TCBS định giá']>0)]
+expanded_df['TCBS opportunity']=((expanded_df['TCBS định giá']/expanded_df['Giá']-1)* 100)
+# Now add the "Outlier" column with the condition
+expanded_df['Outlier'] = expanded_df['TCBS opportunity'].apply(lambda x: x > 1000 or x < -80)
+expanded_df['TCBS opportunity']=expanded_df['TCBS opportunity'].map('{:.2f}%'.format)
+
+tcbs_board=expanded_df[['Mã CP','Giá','TCBS định giá','Outlier','TCBS opportunity','RSI','Tín hiệu KT','Tín hiệu TB động','MA20','MA100','P/E','P/B','ROE','TCRating']]
+st.write(tcbs_board)
