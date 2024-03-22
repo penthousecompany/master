@@ -5,7 +5,7 @@ import json
 # Load the data
 @st.cache_data
 
-url = 'https://raw.githubusercontent.com/penthousecompany/master/main/raw/financial_report_incomestatement_yearly_final/financial_report_incomestatement_yearly_final.csv'
+url = "https://raw.githubusercontent.com/penthousecompany/master/main/raw/financial_report_incomestatement_yearly_final/financial_report_incomestatement_yearly_final.csv"
 
 # Make a GET request to fetch the raw CSV content
 response = requests.get(url)
