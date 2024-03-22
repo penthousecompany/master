@@ -83,7 +83,7 @@ df_index_filtered = df_index[(df_index['Ngay'] >= start) & (df_index['Ngay'] <= 
 merged_data = pd.merge(prices_df, df_index_filtered, left_index=True, right_on='Ngay', how='left')
 merged_data.set_index('Ngay', inplace=True)
 merged_data = merged_data.rename(columns={"GiaDieuChinh": "VNINDEX"})
-
+merged_data.dropna(inplace=True)
 st.write(merged_data)
 
 data_normalized = merged_data / merged_data.iloc[0] * 100
